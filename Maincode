@@ -1,0 +1,46 @@
+int motoPin = 1;    // motoPin goes to a relay to power a 12v waterpump
+int fivPin = 2;
+int tenPin = 3;        // input pins assigned pins and variables
+int fiftnPin = 4;
+
+int usrInput(); //initilize funtion
+int n = 0;  //declare N globally so It doesnt reset at top of the loop
+
+void setup()      
+{
+  int j = 0;        
+  pinMode(motoPin, OUTPUT);     // All high/low reversed for use with transistors in circut
+  pinMode(fivPin, INPUT);
+  pinMode(tenPin, INPUT);
+  pinMode(fiftnPin, INPUT);
+  for (j = 0; j < 3; j++)    //j is declared and used to iterate loop 3 times to signel boot and operational
+  {
+    digitalWrite(motoPin, LOW);     
+    delay(500);
+    digitalWrite(motoPin, HIGH);
+    delay(500);
+  }
+  delay(2000);
+}
+void loop()
+{
+  long i = 0;    //set n defualt value to 0 so it runs until a usrInput() is set
+   digitalWrite(motoPin, LOW);
+    for (long i = 0; i < (30*1000L); i++)   // for 30 seconds run pump and look for input from usrInput function THIS IS THE RUN PORTION
+    {
+      delay(1);
+      if (usrInput() > 0)
+      {
+        n = usrInput();
+      }
+    }
+   digitalWrite(motoPin, HIGH);
+    for (long i = 0; i < (n*60*1000L); i++)  //turn off and wait for n minutes before running again THIS IS THE WAIT PORTION
+    {
+      delay(1);
+      if (usrInput() > 0)
+      {
+        n = usrInput();
+      }
+    }
+}
